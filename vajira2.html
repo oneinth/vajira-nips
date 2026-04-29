@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เครื่องมือประเมินระดับความปวดเด็ก</title>
+
+<style>
+  body {
+    font-family: "Sarabun", sans-serif;
+    background: linear-gradient(135deg, #ffd6e0, #d6f0ff);
+    padding: 15px;
+    margin: 0;
+    min-height: 100vh;
+  }
+
+  h2 {
+    text-align: center;
+    color: #444;
+    margin-top: 15px;
+    line-height: 1.4;
+  }
+/Users/apisitanandacha/Desktop/vajira2.html
+  .card {
+    background: white;
+    border-radius: 20px;
+    padding: 18px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  .title {
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #2c3e50;
+    font-size: 1.1rem;
+    border-left: 5px solid #ff8fab;
+    padding-left: 10px;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* เพิ่มระยะห่างระหว่างตัวเลือก */
+  }
+
+  input[type="radio"] {
+    display: none;
+  }
+
+  /* ปรับแต่ง Label ให้มีสัญลักษณ์หน้าข้อ */
+  label {
+    display: flex;
+    align-items: flex-start;
+    padding: 14px 15px;
+    border-radius: 12px;
+    background: #ffffff;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 1rem;
+    color: #444;
+    border: 2px solid #f0f0f0; /* เน้นขอบให้เห็นชัดขึ้น */
+    line-height: 1.5;
+  }
+
+  /* เพิ่มสัญลักษณ์วงกลมหน้าข้อความ */
+  label::before {
+    content: "○";
+    margin-right: 12px;
+    font-weight: bold;
+    color: #ff8fab;
+    flex-shrink: 0;
+    font-size: 1.2rem;
+  }
+
+  /* เมื่อเลือกแล้วให้เปลี่ยนสีและสัญลักษณ์ */
+  input[type="radio"]:checked + label {
+    background: #e3f2fd;
+    color: #0d47a1;
+    font-weight: bold;
+    border-color: #6ec1ff;
+    box-shadow: 0 3px 6px rgba(110, 193, 255, 0.2);
+  }
+
+  input[type="radio"]:checked + label::before {
+    content: "●";
+    color: #1e88e5;
+  }
+
+  .btn-main {
+    width: 100%;
+    padding: 18px;
+    border: none;
+    border-radius: 20px;
+    font-size: 18px;
+    background: #ff8fab;
+    color: white;
+    margin-top: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #e67a94;
+    font-weight: bold;
+    transition: 0.1s;
+  }
+
+  .btn-main:active {
+    transform: translateY(3px);
+    box-shadow: none;
+  }
+
+  .btn-back {
+    background: #95a5a6;
+    margin-top: 30px;
+    font-size: 14px;
+    box-shadow: 0 4px 0 #7f8c8d;
+  }
+
+  #result-container {
+    margin-top: 25px;
+    padding: 25px;
+    border-radius: 25px;
+    text-align: center;
+    display: none;
+    animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  @keyframes pop {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .res-score { font-size: 1.1rem; margin-bottom: 5px; opacity: 0.8; }
+  .res-text { font-size: 1.8rem; font-weight: bold; margin-bottom: 10px; }
+  
+  .alert-msg {
+    background: #d32f2f;
+    color: white;
+    padding: 18px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-top: 15px;
+    border: 3px solid #fff;
+    box-shadow: 0 0 15px rgba(211, 47, 47, 0.4);
+    line-height: 1.4;
+  }
+
+  .bg-none { background: #e8f5e9; border: 4px solid #4caf50; color: #2e7d32; }
+  .bg-low { background: #f1f8e9; border: 4px solid #8bc34a; color: #33691e; }
+  .bg-mid { background: #fff3e0; border: 4px solid #ff9800; color: #ef6c00; }
+  .bg-high { background: #ffebee; border: 4px solid #f44336; color: #c62828; }
+
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div id="page-menu">
+  <h2>🌈 ระบบประเมินระดับความปวด<br>สำหรับผู้ป่วยเด็ก</h2>
+  <button class="btn-main" onclick="startApp('nips')">1. NIPS (ทารกแรกเกิด - 1 ปี)</button>
+  <button class="btn-main" onclick="startApp('flacc')">2. FLACC (3 เดือน - 6 ปี / ไม่รู้สึกตัว)</button>
+  <button class="btn-main" onclick="startApp('cheops')">3. CHEOPS (อายุ 1 - 6 ปี)</button>
+</div>
+
+<div id="page-app" class="hidden">
+  <h2 id="app-title"></h2>
+  <div id="questions-area"></div>
+  
+  <button class="btn-main" onclick="calculate()">✨ คำนวณผลการประเมิน</button>
+  
+  <div id="result-container">
+    <div class="res-score" id="res-score"></div>
+    <div class="res-text" id="res-text"></div>
+    <div id="urgent-alert" class="hidden">🚨 โปรดแจ้งแพทย์หรือพยาบาล<br>ผู้ดูแลทันที!</div>
+  </div>
+
+  <button class="btn-main btn-back" onclick="goBack()">🔙 กลับหน้าหลัก</button>
+</div>
+
+<script>
+// ข้อมูลเดิมตามที่คุณแปลไว้
+const data = {
+  nips: {
+    title: "👶 NIPS (Newborn & Infant Pain Scale)",
+    cutoff: 4,
+    items: [
+      { t: "สีหน้า", n: "f", opt: ["เฉยๆ สบายๆ (0)", "หน้าแสยะ เบ้ปาก ขมวดคิ้ว ปิดตาแน่น (สีหน้าแสดงความไม่สุขสบาย) (1)"] },
+      { t: "ร้องไห้", n: "c", opt: ["ไม่ร้อง (0)", "ร้องคราง (1)", "กรีดร้อง (2)"] },
+      { t: "การหายใจ", n: "b", opt: ["หายใจสม่ำเสมอเป็นปกติ (0)", "หายใจเร็วขึ้น ช้าลง หรือกลั้นหายใจ (1)"] },
+      { t: "แขน", n: "a", opt: ["วางสบายๆ (0)", "งอแขนหรือแขนเหยียดเกร็ง (1)"] },
+      { t: "ขา", n: "l", opt: ["วางสบายๆ (0)", "งอขาหรือขาเหยียดเกร็ง (1)"] },
+      { t: "ระดับการตื่น", n: "s", opt: ["หลับหรือตื่น (0)", "กระสับกระส่าย วุ่นวาย (1)"] }
+    ],
+    calc: (s) => s >= 6 ? ["high","รุนแรง"] : s >= 4 ? ["mid","ปานกลาง"] : s >= 1 ? ["low","เล็กน้อย"] : ["none","ไม่เจ็บปวด"]
+  },
+  flacc: {
+    title: "🧸 FLACC Pain Scale",
+    cutoff: 3,
+    items: [
+      { t: "ใบหน้า", n: "f", opt: ["สีหน้าปกติหรือยิ้ม สบตา สนใจสิ่งแวดล้อม (0)", "หน้านิ่ง หน้าตาเบ้ หรือแสดงสีหน้าไม่พึงพอใจ แยกตัว ไม่สนใจอะไร สีหน้าวิตกกังวล ขมวดคิ้ว ตาหลับไม่สนิท เม้มปาก เป็นครั้งคราว (1)", "กัดฟัน คางสั่น หรือหน้าเหยเก หน้านิ่วคิ้วขมวด เป็นตลอดเวลา หรือบ่อยๆ (2)"] },
+      { t: "ขา", n: "l", opt: ["อยู่ในท่าปกติ ผ่อนคลาย สบายๆ (0)", "อยู่ในท่าไม่สบาย กระสับกระส่าย กล้ามเนื้อตึงแข็ง งอหรือเหยียดเกร็งขา เป็นพักๆ (1)", "เตะ หรือถีบขาขึ้น กล้ามเนื้อตึงเกร็ง สั่น งอหรือเหยียดขามากกว่าปกติ เป็นบ่อยๆ หรือตลอดเวลา (2)"] },
+      { t: "การเคลื่อนไหว", n: "m", opt: ["นอนเงียบๆ นิ่งๆ ท่าปกติ เคลื่อนไหวสบายๆ ง่ายและอิสระ (0)", "บิดตัวไปมา แอ่นหน้า แอ่นหลัง เกร็ง สิ่งที่จะขยับตัว ระมัดระวัง (1)", "ตัวงอ เกร็งจนแข็ง อยู่ในท่าเดิมไม่กล้าขยับตัว หรือสั่นกระตุก (2)"] },
+      { t: "ร้องไห้", n: "c", opt: ["ไม่ร้อง/ไม่คราง (ตื่นหรือหลับ) (0)", "ครางฮือๆ ครางเบาๆ หรือบ่นเป็นบางครั้ง ถอนหายใจ บ่นปวดเป็นบางครั้ง (1)", "ร้องไห้ตลอด หวีดร้อง สะอึกสะอื้นแผดเสียง ร้องตะเบ็ง ตะคอก บ่นปวดบ่อยๆ (2)"] },
+      { t: "การตอบสนองต่อการปลอบโยน", n: "co", opt: ["เชื่อฟังดี สบายๆ สงบนิ่ง ดูมีความสุข ผ่อนคลาย ไม่ต้องการการปลอบโยน (0)", "ปลอบโยนได้ด้วยการสัมผัส โอบกอด พูดคุย (1)", "ยากที่จะปลอบโยน (2)"] }
+    ],
+    calc: (s) => s >= 7 ? ["high","รุนแรง"] : s >= 4 ? ["mid","ปานกลาง"] : s >= 1 ? ["low","เล็กน้อย"] : ["none","ไม่เจ็บปวด"]
+  },
+  cheops: {
+    title: "🎨 CHEOPS Pain Scale",
+    cutoff: 8,
+    items: [
+      { t: "สีหน้า", n: "f", opt: ["ยิ้ม (0)", "เฉย (1)", "เบ้ (2)"] },
+      { t: "ร้องไห้", n: "c", opt: ["ไม่ร้อง (1)", "คราง, ร้องไห้ (2)", "หวีดร้อง (3)"] },
+      { t: "การส่งเสียง", n: "v", opt: ["พูด สนุกสนาน ร่าเริง ไม่พูด (0)", "บ่นอื่นๆ / หิว, หาแม่ (1)", "บ่นปวด, บ่นอื่นๆ (2)"] },
+      { t: "ท่าทาง (ลำตัว)", n: "t", opt: ["ธรรมดา, สบายๆ (1)", "ดิ้น, เกร็ง, สั่น, ยืน, ตื่นจนถูกตรึงไว้ (2)"] },
+      { t: "การสัมผัสแผล", n: "w", opt: ["ไม่สัมผัส (1)", "เอื้อมมือมาแตะ, ตะปบ, เอื้อมมือจนต้องจับมือหรือแขนไว้ (2)"] },
+      { t: "ขา", n: "l", opt: ["ท่าสบาย (1)", "บิดตัว, เตะ, ดึงขาหนี, เกร็ง, ยืน, ตื่นจนถูกจับหรือตรึงไว้ (2)"] }
+    ],
+    calc: (s) => s >= 11 ? ["high","รุนแรง"] : s >= 8 ? ["mid","ปานกลาง"] : s >= 5 ? ["low","เล็กน้อย"] : ["none","ไม่เจ็บปวด"]
+  }
+};
+
+let currentMode = '';
+
+function startApp(mode) {
+  currentMode = mode;
+  document.getElementById('page-menu').classList.add('hidden');
+  document.getElementById('page-app').classList.remove('hidden');
+  document.getElementById('app-title').innerText = data[mode].title;
+  
+  const area = document.getElementById('questions-area');
+  area.innerHTML = '';
+  
+  data[mode].items.forEach(item => {
+    let optionsHtml = '';
+    item.opt.forEach((o, i) => {
+      const val = o.match(/\((\d+)\)/)[1];
+      const textOnly = o.replace(/\(\d+\)/, '').trim();
+      optionsHtml += `
+        <div class="option">
+          <input type="radio" name="${item.n}" value="${val}" id="${item.n}${i}">
+          <label for="${item.n}${i}">${textOnly}</label>
+        </div>`;
+    });
+
+    area.innerHTML += `
+      <div class="card">
+        <div class="title">${item.t}</div>
+        <div class="options">${optionsHtml}</div>
+      </div>`;
+  });
+  document.getElementById('result-container').style.display = 'none';
+  window.scrollTo(0,0);
+}
+
+function calculate() {
+  const inputs = document.querySelectorAll('#questions-area input:checked');
+  if (inputs.length < data[currentMode].items.length) {
+    alert("กรุณาเลือกให้ครบทุกหัวข้อก่อนคำนวณครับ");
+    return;
+  }
+
+  let score = 0;
+  inputs.forEach(input => score += Number(input.value));
+  const [bgClass, statusText] = data[currentMode].calc(score);
+  const cutoff = data[currentMode].cutoff;
+  
+  const resBox = document.getElementById('result-container');
+  const alertBox = document.getElementById('urgent-alert');
+  
+  resBox.style.display = 'block';
+  resBox.className = 'bg-' + bgClass;
+  document.getElementById('res-score').innerText = `คะแนนรวมทั้งหมด: ${score}`;
+  document.getElementById('res-text').innerText = 'ระดับ: ' + statusText;
+  
+  if (score >= cutoff) {
+    alertBox.classList.remove('hidden');
+    alertBox.className = 'alert-msg';
+  } else {
+    alertBox.classList.add('hidden');
+  }
+  
+  resBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function goBack() {
+  document.getElementById('page-menu').classList.remove('hidden');
+  document.getElementById('page-app').classList.add('hidden');
+  window.scrollTo(0,0);
+}
+</script>
+
+</body>
+</html>
