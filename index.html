@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>เครื่องมือประเมินระดับความปวดเด็ก</title>
+<title>เครื่องมือประเมินความปวดในเด็กสำหรับผู้ปกครอง</title>
 
 <style>
   body {
@@ -20,7 +20,16 @@
     margin-top: 15px;
     line-height: 1.4;
   }
-/Users/apisitanandacha/Desktop/vajira2.html
+
+  .sub {
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: bold;
+    text-decoration: underline;
+    color: #333;
+    margin: 25px 0 20px;
+  }
+
   .card {
     background: white;
     border-radius: 20px;
@@ -38,17 +47,10 @@
     padding-left: 10px;
   }
 
-  .options {
-    display: flex;
-    flex-direction: column;
-    gap: 12px; /* เพิ่มระยะห่างระหว่างตัวเลือก */
-  }
+  .options { display: flex; flex-direction: column; gap: 12px; }
 
-  input[type="radio"] {
-    display: none;
-  }
+  input[type="radio"] { display: none; }
 
-  /* ปรับแต่ง Label ให้มีสัญลักษณ์หน้าข้อ */
   label {
     display: flex;
     align-items: flex-start;
@@ -59,11 +61,10 @@
     transition: 0.2s;
     font-size: 1rem;
     color: #444;
-    border: 2px solid #f0f0f0; /* เน้นขอบให้เห็นชัดขึ้น */
+    border: 2px solid #f0f0f0;
     line-height: 1.5;
   }
 
-  /* เพิ่มสัญลักษณ์วงกลมหน้าข้อความ */
   label::before {
     content: "○";
     margin-right: 12px;
@@ -73,7 +74,6 @@
     font-size: 1.2rem;
   }
 
-  /* เมื่อเลือกแล้วให้เปลี่ยนสีและสัญลักษณ์ */
   input[type="radio"]:checked + label {
     background: #e3f2fd;
     color: #0d47a1;
@@ -82,10 +82,7 @@
     box-shadow: 0 3px 6px rgba(110, 193, 255, 0.2);
   }
 
-  input[type="radio"]:checked + label::before {
-    content: "●";
-    color: #1e88e5;
-  }
+  input[type="radio"]:checked + label::before { content: "●"; color: #1e88e5; }
 
   .btn-main {
     width: 100%;
@@ -102,10 +99,38 @@
     transition: 0.1s;
   }
 
-  .btn-main:active {
-    transform: translateY(3px);
-    box-shadow: none;
+  .btn-main:active { transform: translateY(3px); box-shadow: none; }
+
+  /* ปุ่มเมนูเลือกอายุ */
+  .menu-btn {
+    display: block;
+    width: 100%;
+    border: none;
+    border-radius: 30px;
+    padding: 26px 15px;
+    margin-bottom: 20px;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    font-family: inherit;
+    transition: 0.1s;
   }
+  .menu-btn:active { transform: translateY(4px); box-shadow: none !important; }
+  .m-age { font-size: 1.6rem; font-weight: bold; line-height: 1.4; }
+  .m-sub { font-size: 1.05rem; margin-top: 4px; }
+  .badge {
+    display: inline-block;
+    background: rgba(0,0,0,0.12);
+    padding: 4px 22px;
+    border-radius: 20px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-top: 10px;
+  }
+  .cut { font-style: italic; opacity: 0.9; margin-top: 8px; }
+  .c-pink  { background: #f092ac; box-shadow: 0 8px 0 #d97a94; }
+  .c-blue  { background: #80bdf8; box-shadow: 0 8px 0 #66a3de; }
+  .c-green { background: #98d4b0; box-shadow: 0 8px 0 #7fba96; }
 
   .btn-back {
     background: #95a5a6;
@@ -130,7 +155,7 @@
 
   .res-score { font-size: 1.1rem; margin-bottom: 5px; opacity: 0.8; }
   .res-text { font-size: 1.8rem; font-weight: bold; margin-bottom: 10px; }
-  
+
   .alert-msg {
     background: #d32f2f;
     color: white;
@@ -144,6 +169,24 @@
     line-height: 1.4;
   }
 
+  /* แนวทางปฏิบัติ */
+  .guide {
+    background: rgba(255,255,255,0.75);
+    color: #333;
+    text-align: left;
+    border-radius: 18px;
+    padding: 16px 18px;
+    margin-top: 18px;
+    line-height: 1.6;
+    font-size: 1rem;
+  }
+  .guide h3 { margin: 0 0 8px; font-size: 1.15rem; color: inherit; }
+  .guide ul { margin: 0 0 12px; padding-left: 20px; }
+  .guide li { margin-bottom: 6px; }
+  .guide .age-box { background: #fff; border-radius: 12px; padding: 12px 14px; }
+  .guide .age-box p { margin: 4px 0; }
+  .guide .note { color: #c62828; font-weight: bold; margin-top: 10px; }
+
   .bg-none { background: #e8f5e9; border: 4px solid #4caf50; color: #2e7d32; }
   .bg-low { background: #f1f8e9; border: 4px solid #8bc34a; color: #33691e; }
   .bg-mid { background: #fff3e0; border: 4px solid #ff9800; color: #ef6c00; }
@@ -155,29 +198,54 @@
 <body>
 
 <div id="page-menu">
-  <h2>🌈 ระบบประเมินระดับความปวด<br>สำหรับผู้ป่วยเด็ก</h2>
-  <button class="btn-main" onclick="startApp('nips')">1. NIPS (ทารกแรกเกิด - 1 ปี)</button>
-  <button class="btn-main" onclick="startApp('flacc')">2. FLACC (3 เดือน - 6 ปี / ไม่รู้สึกตัว)</button>
-  <button class="btn-main" onclick="startApp('cheops')">3. CHEOPS (อายุ 1 - 6 ปี)</button>
+  <h2>เครื่องมือประเมินความปวดในเด็กสำหรับผู้ปกครอง</h2>
+  <div class="sub">กรุณาเลือกอายุเด็ก</div>
+
+  <button class="menu-btn c-pink" onclick="startApp('nips')">
+    <div class="m-age">ทารกแรกเกิด - 1 ปี</div>
+    <span class="badge">NIPS</span>
+    <div class="cut">(Cut point = 4)</div>
+  </button>
+
+  <button class="menu-btn c-blue" onclick="startApp('flacc')">
+    <div class="m-age">อายุ 3 เดือน - 6 ปี</div>
+    <div class="m-sub">กรณีไม่รู้สึกตัว หรือมีความผิดปกติทางสมอง</div>
+    <span class="badge">FLACC</span>
+    <div class="cut">(Cut point = 3)</div>
+  </button>
+
+  <button class="menu-btn c-green" onclick="startApp('cheops')">
+    <div class="m-age">อายุ 1 - 6 ปี</div>
+    <span class="badge">CHEOPS</span>
+    <div class="cut">(Cut point = 8)</div>
+  </button>
 </div>
 
 <div id="page-app" class="hidden">
   <h2 id="app-title"></h2>
   <div id="questions-area"></div>
-  
+
   <button class="btn-main" onclick="calculate()">✨ คำนวณผลการประเมิน</button>
-  
+
   <div id="result-container">
     <div class="res-score" id="res-score"></div>
     <div class="res-text" id="res-text"></div>
     <div id="urgent-alert" class="hidden">🚨 โปรดแจ้งแพทย์หรือพยาบาล<br>ผู้ดูแลทันที!</div>
+    <div id="guide-area"></div>
   </div>
 
   <button class="btn-main btn-back" onclick="goBack()">🔙 กลับหน้าหลัก</button>
 </div>
 
 <script>
-// ข้อมูลเดิมตามที่คุณแปลไว้
+const LV = {
+  none: "ไม่เจ็บปวด",
+  low: "Mild (ปวดเล็กน้อย)",
+  mid: "Moderate (ปวดปานกลาง)",
+  high: "Severe (ปวดระดับรุนแรง)"
+};
+
+// เกณฑ์ระดับความปวดตามตารางแนบ
 const data = {
   nips: {
     title: "👶 NIPS (Newborn & Infant Pain Scale)",
@@ -190,7 +258,7 @@ const data = {
       { t: "ขา", n: "l", opt: ["วางสบายๆ (0)", "งอขาหรือขาเหยียดเกร็ง (1)"] },
       { t: "ระดับการตื่น", n: "s", opt: ["หลับหรือตื่น (0)", "กระสับกระส่าย วุ่นวาย (1)"] }
     ],
-    calc: (s) => s >= 6 ? ["high","รุนแรง"] : s >= 4 ? ["mid","ปานกลาง"] : s >= 1 ? ["low","เล็กน้อย"] : ["none","ไม่เจ็บปวด"]
+    calc: (s) => s >= 5 ? "high" : s >= 3 ? "mid" : s >= 1 ? "low" : "none"
   },
   flacc: {
     title: "🧸 FLACC Pain Scale",
@@ -202,7 +270,7 @@ const data = {
       { t: "ร้องไห้", n: "c", opt: ["ไม่ร้อง/ไม่คราง (ตื่นหรือหลับ) (0)", "ครางฮือๆ ครางเบาๆ หรือบ่นเป็นบางครั้ง ถอนหายใจ บ่นปวดเป็นบางครั้ง (1)", "ร้องไห้ตลอด หวีดร้อง สะอึกสะอื้นแผดเสียง ร้องตะเบ็ง ตะคอก บ่นปวดบ่อยๆ (2)"] },
       { t: "การตอบสนองต่อการปลอบโยน", n: "co", opt: ["เชื่อฟังดี สบายๆ สงบนิ่ง ดูมีความสุข ผ่อนคลาย ไม่ต้องการการปลอบโยน (0)", "ปลอบโยนได้ด้วยการสัมผัส โอบกอด พูดคุย (1)", "ยากที่จะปลอบโยน (2)"] }
     ],
-    calc: (s) => s >= 7 ? ["high","รุนแรง"] : s >= 4 ? ["mid","ปานกลาง"] : s >= 1 ? ["low","เล็กน้อย"] : ["none","ไม่เจ็บปวด"]
+    calc: (s) => s >= 7 ? "high" : s >= 4 ? "mid" : s >= 1 ? "low" : "none"
   },
   cheops: {
     title: "🎨 CHEOPS Pain Scale",
@@ -215,7 +283,56 @@ const data = {
       { t: "การสัมผัสแผล", n: "w", opt: ["ไม่สัมผัส (1)", "เอื้อมมือมาแตะ, ตะปบ, เอื้อมมือจนต้องจับมือหรือแขนไว้ (2)"] },
       { t: "ขา", n: "l", opt: ["ท่าสบาย (1)", "บิดตัว, เตะ, ดึงขาหนี, เกร็ง, ยืน, ตื่นจนถูกจับหรือตรึงไว้ (2)"] }
     ],
-    calc: (s) => s >= 11 ? ["high","รุนแรง"] : s >= 8 ? ["mid","ปานกลาง"] : s >= 5 ? ["low","เล็กน้อย"] : ["none","ไม่เจ็บปวด"]
+    calc: (s) => s >= 10 ? "high" : s >= 7 ? "mid" : s >= 5 ? "low" : "none"
+  }
+};
+
+// แนวทางปฏิบัติแต่ละระดับ
+const guides = {
+  low: {
+    title: "แนวทางการปฏิบัติ (Mild)",
+    items: [
+      "จัดท่าที่เด็กสบาย ลดแรงกดบริเวณแผลหรือบริเวณที่ปวด",
+      "ให้ผู้ปกครองอยู่ใกล้ชิด ปลอบโยน และสัมผัสเด็กอย่างเหมาะสม",
+      "ชวนดูการ์ตูน ฟังเพลง ดูหนังสือ เล่นของเล่น หรือพูดคุย",
+      "สัมผัส ลูบหลัง จับมือ หรือกอดอย่างเหมาะสม",
+      "สอนการหายใจช้า ๆ และผ่อนคลายกล้ามเนื้อในเด็กที่สามารถทำตามได้",
+      "ลดเสียงรบกวน ลดแสงที่ไม่จำเป็น จัดสิ่งแวดล้อมให้สงบ",
+      "ใช้ความร้อนหรือความเย็นเมื่อเหมาะสมกับชนิดของความปวดและไม่มีข้อห้าม"
+    ],
+    age: [
+      "<b>ทารก:</b> ห่อตัว (Swaddling) เมื่อเหมาะสม, skin-to-skin, rocking, non-nutritive sucking",
+      "<b>เด็กเล็ก:</b> อุ้มปลอบ, ของเล่น, เพลง, bubbles, cartoon",
+      "<b>เด็กโต:</b> ดูวิดีโอ, เกม, music, guided breathing"
+    ]
+  },
+  mid: {
+    title: "แนวทางปฏิบัติ (Moderate)",
+    items: [
+      "<b>Positioning</b> จัดท่าที่ลดแรงตึงของแผล ลดการเคลื่อนไหวที่กระตุ้นความปวด",
+      "<b>Distraction therapy</b> ใช้กิจกรรมที่เด็กสนใจต่อเนื่อง เช่น เกม วิดีโอ หรือ interactive activity",
+      "<b>Deep breathing</b> ฝึกหายใจช้า ๆ สูดลมหายใจเข้าลึกและผ่อนออกช้า ๆ",
+      "<b>Guided imagery</b> ให้เด็กจินตนาการถึงสถานที่หรือเหตุการณ์ที่รู้สึกปลอดภัยและมีความสุข",
+      "<b>Music therapy</b> เปิดเพลงที่เด็กเลือกหรือเพลงที่ช่วยให้ผ่อนคลาย",
+      "<b>Massage</b> นวดเบา ๆ บริเวณที่ไม่ใช่ตำแหน่งบาดเจ็บ แผล หรือข้อห้าม",
+      "<b>Therapeutic play</b> ใช้การเล่นเพื่อให้เด็กระบายความกังวลและลดความกลัว",
+      "<b>Family participation</b> ให้ผู้ปกครองช่วยปลอบ กอด จับมือ และเป็นผู้ร่วมทำกิจกรรม distraction",
+      "<b>Reduce anxiety</b> อธิบายขั้นตอนการดูแลด้วยภาษาที่เหมาะสมกับวัย"
+    ]
+  },
+  high: {
+    title: "แนวทางปฏิบัติ (Severe)",
+    items: [
+      "<b>Optimal positioning</b> จัดท่าที่เด็กเจ็บน้อยที่สุด ไม่ฝืนเคลื่อนไหว",
+      "<b>Continuous family support</b> ให้ผู้ปกครองอยู่กับเด็กอย่างใกล้ชิด ช่วยปลอบและสร้างความรู้สึกปลอดภัย",
+      "<b>Intensive distraction</b> ใช้วิดีโอ เกม การเล่าเรื่อง ของเล่น หรือกิจกรรมที่ดึงความสนใจอย่างต่อเนื่อง",
+      "<b>Guided relaxation</b> ใช้การหายใจ การผ่อนคลายกล้ามเนื้อ และ guided imagery หากเด็กสามารถทำได้",
+      "<b>Environmental control</b> ลดเสียงรบกวน จำกัดการรบกวนที่ไม่จำเป็น และจัดสิ่งแวดล้อมให้สงบ",
+      "<b>Comfort touch</b> จับมือ กอด หรือลูบหลังตามความต้องการของเด็ก",
+      "<b>Psychological support</b> รับฟังความรู้สึก ไม่ตำหนิ ไม่บังคับให้เด็กหยุดร้อง และให้ความมั่นใจ",
+      "<b>Reassessment</b> ประเมินคะแนนปวดซ้ำหลัง intervention และติดตามอาการอย่างใกล้ชิด"
+    ],
+    note: "***หมายเหตุ ปฏิบัติควบคู่กับการได้รับยาบรรเทาปวดตามแพทย์สั่ง"
   }
 };
 
@@ -226,10 +343,10 @@ function startApp(mode) {
   document.getElementById('page-menu').classList.add('hidden');
   document.getElementById('page-app').classList.remove('hidden');
   document.getElementById('app-title').innerText = data[mode].title;
-  
+
   const area = document.getElementById('questions-area');
   area.innerHTML = '';
-  
+
   data[mode].items.forEach(item => {
     let optionsHtml = '';
     item.opt.forEach((o, i) => {
@@ -252,6 +369,19 @@ function startApp(mode) {
   window.scrollTo(0,0);
 }
 
+function renderGuide(level) {
+  const g = guides[level];
+  if (!g) return '';
+  let html = `<div class="guide"><h3>${g.title}</h3><ul>` +
+    g.items.map(x => `<li>${x}</li>`).join('') + `</ul>`;
+  if (g.age) {
+    html += `<h3>แนวทางตามช่วงวัย</h3><div class="age-box">` +
+      g.age.map(x => `<p>${x}</p>`).join('') + `</div>`;
+  }
+  if (g.note) html += `<div class="note">${g.note}</div>`;
+  return html + `</div>`;
+}
+
 function calculate() {
   const inputs = document.querySelectorAll('#questions-area input:checked');
   if (inputs.length < data[currentMode].items.length) {
@@ -261,25 +391,26 @@ function calculate() {
 
   let score = 0;
   inputs.forEach(input => score += Number(input.value));
-  const [bgClass, statusText] = data[currentMode].calc(score);
+  const level = data[currentMode].calc(score);
   const cutoff = data[currentMode].cutoff;
-  
+
   const resBox = document.getElementById('result-container');
   const alertBox = document.getElementById('urgent-alert');
-  
+
   resBox.style.display = 'block';
-  resBox.className = 'bg-' + bgClass;
+  resBox.className = 'bg-' + level;
   document.getElementById('res-score').innerText = `คะแนนรวมทั้งหมด: ${score}`;
-  document.getElementById('res-text').innerText = 'ระดับ: ' + statusText;
-  
+  document.getElementById('res-text').innerText = 'ระดับ: ' + LV[level];
+  document.getElementById('guide-area').innerHTML = renderGuide(level);
+
   if (score >= cutoff) {
     alertBox.classList.remove('hidden');
     alertBox.className = 'alert-msg';
   } else {
     alertBox.classList.add('hidden');
   }
-  
-  resBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  resBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function goBack() {
